@@ -1,0 +1,1584 @@
+name: PATIENT_360_SEMANTIC_VIEW
+tables:
+  - name: ADVERSE_EVENTS
+    description: "The table contains records of adverse events experienced by patients, linked to specific clinical encounters. Each record captures details about a suspected drug, the nature of the event including its MedDRA preferred term classification, severity, and seriousness, as well as the outcome and any actions taken in response."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: ADVERSE_EVENTS
+    primary_key:
+      columns:
+        - ENCOUNTER_ID
+    dimensions:
+      - name: ACTION_TAKEN
+        expr: '"action_taken"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Dose held; potassium recheck in 72h
+          - Dose reduced to 16 units
+          - No change; counseling
+      - name: AE_ID
+        expr: '"ae_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - AE001
+          - AE002
+          - AE003
+      - name: ENCOUNTER_ID
+        expr: '"encounter_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E103
+          - E126
+          - E127
+      - name: EVENT
+        expr: '"event"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Hyperkalemia
+          - Hypoglycemia (patient-reported glucose 58 mg/dL)
+          - "Epistaxis, self-limited"
+      - name: EVIDENCE
+        expr: '"evidence"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Potassium 5.1 mmol/L (L0019)
+          - Potassium 5.2 mmol/L (L0086)
+          - Patient glucose log reported at visit
+      - name: MEDDRA_PT
+        expr: '"meddra_pt"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Hyperkalaemia
+          - Epistaxis
+          - Hypoglycaemia
+      - name: OUTCOME
+        expr: '"outcome"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Recovering
+          - Recovered
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P011
+          - P014
+      - name: SERIOUS
+        expr: '"serious"'
+        data_type: BOOLEAN
+        access_modifier: public_access
+        sample_values:
+          - "0"
+      - name: SEVERITY
+        expr: '"severity"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Moderate
+          - Mild
+      - name: SUSPECT_DRUG
+        expr: '"suspect_drug"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Lisinopril
+          - Sacubitril/valsartan
+          - Insulin glargine
+    time_dimensions:
+      - name: ONSET_DATE
+        expr: '"onset_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20586"
+          - "20545"
+          - "20559"
+  - name: CARE_GAPS
+    description: "The table contains records of care gaps identified for patients, tracking outstanding or unmet clinical quality measures. Each record represents a single care gap for a patient and includes details about the specific measure, current status, due dates, and supporting evidence and policy documentation."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: CARE_GAPS
+    dimensions:
+      - name: CARE_GAP
+        expr: '"care_gap"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - HbA1c control (<8.0%)
+          - Diabetic retinal eye exam
+          - Kidney health evaluation (eGFR + uACR)
+      - name: EVIDENCE
+        expr: '"evidence"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Latest HbA1c 7.5% (L0021)
+          - No retinal exam encounter in period
+          - eGFR and uACR on file
+      - name: GAP_ID
+        expr: '"gap_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - G001
+          - G002
+          - G003
+      - name: MEASURE
+        expr: '"measure"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - GSD
+          - EED
+          - KED
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: POLICY_DOC
+        expr: '"policy_doc"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - DOC-REG-002
+          - DOC-REG-001
+          - DOC-REG-004
+      - name: STATUS
+        expr: '"status"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - CLOSED
+          - OPEN
+          - MISSED
+    time_dimensions:
+      - name: DUE_DATE
+        expr: '"due_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20818"
+          - "20597"
+          - "20543"
+  - name: CONDITIONS
+    description: "The table contains records of medical conditions associated with patients. Each record represents a single diagnosed condition and includes details about the condition's clinical classification, descriptive information, current status, and year of onset."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: CONDITIONS
+    dimensions:
+      - name: CONDITION_KEY
+        expr: '"condition_key"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - T2D
+          - HTN
+          - CKD3
+      - name: DESCRIPTION
+        expr: '"description"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Type 2 diabetes mellitus
+          - Essential hypertension
+          - "Chronic kidney disease, stage 3"
+      - name: ICD10
+        expr: '"icd10"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E11.9
+          - I10
+          - N18.30
+      - name: ONSET_YEAR
+        expr: '"onset_year"'
+        data_type: "NUMBER(4,0)"
+        access_modifier: public_access
+        sample_values:
+          - "2020"
+          - "2014"
+          - "2012"
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: STATUS
+        expr: '"status"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - active
+  - name: DOCUMENT_CHUNKS
+    description: "The table contains records of segmented text chunks extracted from patient-related documents. Each record represents a single chunk of a document and includes details about the associated patient, encounter, document type, and the extracted text content along with its position within the source document."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: DOCUMENT_CHUNKS
+    dimensions:
+      - name: CHUNK_INDEX
+        expr: CHUNK_INDEX
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "0"
+          - "1"
+          - "2"
+      - name: CHUNK_TEXT
+        expr: CHUNK_TEXT
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - |-
+            DISCHARGE SUMMARY
+            Patient: George Kowalski MRN: MRN700108 DOB: 1946-01-08 Sex: M
+            Encounter: E120 Date: 2025-10-05 Facility: Lakeside General Hospital
+            Author: Dr. K. Osei (Hospitalist)
+            Admission / Discharge Admitted 2025-10-05, discharged 2025-10-11 (LOS 6 days) to home.
+            Discharge Diagnosis J44.1 - worsening dyspnea and productive cough; comorbidities: Chronic obstructive
+            pulmonary disease (J44.9).
+            Discharge Medications
+            - Tiotropium 18 mcg inhaled daily - Albuterol HFA 90 mcg 2 puffs q4h PRN
+            Follow-up Instructions Follow up with PCP Dr. A. Patel within 7 days. Return for worsening symptoms. Home
+            health referral recommended.
+            Care Items Pending at Discharge
+            None
+            SYNTHETIC - scanned copy
+          - |-
+            DISCHARGE SUMMARY
+            Patient: Linda Okafor MRN: MRN700105 DOB: 1948-12-03 Sex: F
+            Encounter: E111 Date: 2026-03-25 Facility: Lakeside General Hospital
+            Author: Dr. K. Osei (Hospitalist).
+            Admission / Discharge Admitted 2026-03-25, discharged 2026-03-29 (LOS 4 days) to home.
+            Discharge Diagnosis "J44.1 - worsening dyspnea and productive cough; comorbidities: Chronic obstructive
+            pulmonary disease (J44.9); Essential hypertension (110).
+            Discharge Medications
+            - Lisinopril 10 mg daily - Tiotropium 18 mcg inhaled daily · Albuterol HFA 90 mcg 2 puffs q4h PRN
+            Follow-up Instructions
+            Follow up with PCP Dr. A. Patel within 7 days. Return for worsening symptoms.
+            Care Items Pending at Discharge
+            - Blood pressure control (<140/90)
+            - Annual influenza vaccine
+            SYNTHETIC - scanned copy
+          - |-
+            DISCHARGE SUMMARY
+            Patient: Walter Price MRN: MRN700115 DOB: 1950-01-08 Sex: M
+            Encounter: E138 Date: 2026-04-19 Facility: Lakeside General Hospital
+            Author: Dr. K. Osei (Hospitalist)
+            Admission / Discharge Admitted 2026-04-19, discharged 2026-04-23 (LOS 4 days) to home.
+            Discharge Diagnosis 150.23 - shortness of breath and leg swelling; comorbidities: Chronic systolic (HFrEF)
+            heart failure (150.22); Atrial fibrillation (148.91).
+            Discharge Medications
+            - Carvedilol 6.25 mg BID - Furosemide 40 mg daily - Sacubitril/valsartan 24/26 mg BID
+            - Apixaban 5 mg BID
+            Follow-up Instructions Follow up with PCP Dr. A. Patel within 7 days. Return for worsening symptoms. Home
+            health referral recommended.
+            Care Items Pending at Discharge
+            - Beta-blocker persistence (PDC>=80%)
+            SYNTHETIC - scanned copy
+      - name: DOCUMENT_ID
+        expr: DOCUMENT_ID
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 9caca4c5-c643-46e4-af0a-9f7d6db87f6a
+          - a460b00b-8b8b-4280-b9aa-bce3a64985ee
+          - b21db455-3106-4829-b280-2a1a79941b90
+      - name: DOC_TYPE
+        expr: DOC_TYPE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - JPEG
+          - PDF
+      - name: ENCOUNTER_ID
+        expr: ENCOUNTER_ID
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E120
+          - E111
+          - E138
+      - name: FILE_PATH
+        expr: FILE_PATH
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - UNSTRUCTURED/CLINICAL_DOCUMENTS/SCANNED/DOC-DS-018_P008_E120_scan.jpeg
+          - UNSTRUCTURED/CLINICAL_DOCUMENTS/SCANNED/DOC-DS-012_P005_E111_scan.jpeg
+          - UNSTRUCTURED/CLINICAL_DOCUMENTS/SCANNED/DOC-DS-038_P015_E138_scan.jpeg
+      - name: METADATA
+        expr: METADATA
+        data_type: VARIANT
+        access_modifier: public_access
+        sample_values:
+          - |-
+            {
+              "content": "DISCHARGE SUMMARY\nPatient: George Kowalski MRN: MRN700108 DOB: 1946-01-08 Sex: M\nEncounter: E120 Date: 2025-10-05 Facility: Lakeside General Hospital\nAuthor: Dr. K. Osei (Hospitalist)\nAdmission / Discharge Admitted 2025-10-05, discharged 2025-10-11 (LOS 6 days) to home.\nDischarge Diagnosis J44.1 - worsening dyspnea and productive cough; comorbidities: Chronic obstructive\npulmonary disease (J44.9).\nDischarge Medications\n- Tiotropium 18 mcg inhaled daily - Albuterol HFA 90 mcg 2 puffs q4h PRN\nFollow-up Instructions Follow up with PCP Dr. A. Patel within 7 days. Return for worsening symptoms. Home\nhealth referral recommended.\nCare Items Pending at Discharge\nNone\nSYNTHETIC - scanned copy",
+              "metadata": {
+                "pageCount": 1
+              }
+            }
+          - |-
+            {
+              "content": "DISCHARGE SUMMARY\nPatient: Linda Okafor MRN: MRN700105 DOB: 1948-12-03 Sex: F\nEncounter: E111 Date: 2026-03-25 Facility: Lakeside General Hospital\nAuthor: Dr. K. Osei (Hospitalist).\nAdmission / Discharge Admitted 2026-03-25, discharged 2026-03-29 (LOS 4 days) to home.\nDischarge Diagnosis \"J44.1 - worsening dyspnea and productive cough; comorbidities: Chronic obstructive\npulmonary disease (J44.9); Essential hypertension (110).\nDischarge Medications\n- Lisinopril 10 mg daily - Tiotropium 18 mcg inhaled daily · Albuterol HFA 90 mcg 2 puffs q4h PRN\nFollow-up Instructions\nFollow up with PCP Dr. A. Patel within 7 days. Return for worsening symptoms.\nCare Items Pending at Discharge\n- Blood pressure control (<140/90)\n- Annual influenza vaccine\nSYNTHETIC - scanned copy",
+              "metadata": {
+                "pageCount": 1
+              }
+            }
+          - |-
+            {
+              "content": "DISCHARGE SUMMARY\nPatient: Walter Price MRN: MRN700115 DOB: 1950-01-08 Sex: M\nEncounter: E138 Date: 2026-04-19 Facility: Lakeside General Hospital\nAuthor: Dr. K. Osei (Hospitalist)\nAdmission / Discharge Admitted 2026-04-19, discharged 2026-04-23 (LOS 4 days) to home.\nDischarge Diagnosis 150.23 - shortness of breath and leg swelling; comorbidities: Chronic systolic (HFrEF)\nheart failure (150.22); Atrial fibrillation (148.91).\nDischarge Medications\n- Carvedilol 6.25 mg BID - Furosemide 40 mg daily - Sacubitril/valsartan 24/26 mg BID\n- Apixaban 5 mg BID\nFollow-up Instructions Follow up with PCP Dr. A. Patel within 7 days. Return for worsening symptoms. Home\nhealth referral recommended.\nCare Items Pending at Discharge\n- Beta-blocker persistence (PDC>=80%)\nSYNTHETIC - scanned copy",
+              "metadata": {
+                "pageCount": 1
+              }
+            }
+      - name: MRN
+        expr: MRN
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - MRN700108
+          - MRN700105
+          - MRN700111
+      - name: PAGE_NUMBER
+        expr: PAGE_NUMBER
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "1"
+      - name: PATIENT_DETAILS
+        expr: PATIENT_DETAILS
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - George Kowalski
+          - Linda Okafor
+          - Walter Price
+    time_dimensions:
+      - name: CREATED_AT
+        expr: CREATED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1790998584.868000000"
+          - "1790997645.183000000"
+  - name: DOCUMENT_MANIFEST
+    description: "The table contains records of documents that have been uploaded and processed within a data ingestion pipeline. Each record represents a single document and includes details about the file's identity, location, type, and parsed content, as well as the ingestion and processing status and associated timestamps."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: DOCUMENT_MANIFEST
+    primary_key:
+      columns:
+        - DOCUMENT_ID
+    dimensions:
+      - name: DOCUMENT_ID
+        expr: DOCUMENT_ID
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - b32a420c-bcfe-455f-8fd1-1ab6e39cc252
+          - 0fca76db-6f8d-4c6f-8b31-df462e1cf292
+          - d593f492-2fcc-4f5a-8bd6-04f965f7b59e
+      - name: DOCUMENT_TYPE
+        expr: DOCUMENT_TYPE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - PDF
+          - CSV
+          - JPEG
+      - name: FILE_NAME
+        expr: FILE_NAME
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - SAFETY
+          - care_gaps.csv
+          - vitals.csv
+      - name: FILE_PATH
+        expr: FILE_PATH
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - UNSTRUCTURED/SAFETY/DOC-SAF-AE005_P015.pdf
+          - UNSTRUCTURED/SAFETY/DOC-SAF-AE008_P023.pdf
+          - STRUCTURED/care_gaps.csv
+      - name: FILE_TYPE
+        expr: FILE_TYPE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - UNSTRUCTURED
+          - STRUCTURED
+      - name: FILE_URL
+        expr: FILE_URL
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - https://vyc57511.us-east-1.snowflakecomputing.com/api/files/PATIENT_360_RAG/RAW/DOCUMENT_STAGE/UNSTRUCTURED%2fSAFETY%2fDOC-SAF-AE005_P015%2epdf
+          - https://vyc57511.us-east-1.snowflakecomputing.com/api/files/PATIENT_360_RAG/RAW/DOCUMENT_STAGE/UNSTRUCTURED%2fSAFETY%2fDOC-SAF-AE008_P023%2epdf
+          - https://vyc57511.us-east-1.snowflakecomputing.com/api/files/PATIENT_360_RAG/RAW/DOCUMENT_STAGE/STRUCTURED%2fcare_gaps%2ecsv
+      - name: INGESTION_STATUS
+        expr: INGESTION_STATUS
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - PENDING
+          - LOADED
+      - name: PARSED_CONTENT
+        expr: PARSED_CONTENT
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+    time_dimensions:
+      - name: PROCESSED_TIMESTAMP
+        expr: PROCESSED_TIMESTAMP
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+      - name: UPLOAD_TIMESTAMP
+        expr: UPLOAD_TIMESTAMP
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1790989866.973000000"
+  - name: ENCOUNTERS
+    description: "The table contains records of patient medical encounters, including visits, admissions, and other clinical interactions. Each record represents a single encounter and includes details about the facility, department, attending provider, clinical reason, and diagnosis, as well as temporal information such as admission and discharge dates, length of stay, and readmission indicators."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: ENCOUNTERS
+    primary_key:
+      columns:
+        - ENCOUNTER_ID
+    dimensions:
+      - name: ATTENDING
+        expr: '"attending"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Dr. R. Fischer
+          - Dr. K. Osei (Hospitalist)
+          - Dr. S. Morgan
+      - name: DAYS_SINCE_DISCHARGE
+        expr: '"days_since_discharge"'
+        data_type: "NUMBER(2,0)"
+        access_modifier: public_access
+        sample_values:
+          - "11"
+          - "15"
+      - name: DEPARTMENT
+        expr: '"department"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Outpatient
+          - Inpatient
+          - Ophthalmology
+      - name: ENCOUNTER_ID
+        expr: '"encounter_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E101
+          - E102
+          - E103
+      - name: ENCOUNTER_TYPE
+        expr: '"encounter_type"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Outpatient
+          - Inpatient
+          - ED
+      - name: FACILITY
+        expr: '"facility"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Northgate Primary Care
+          - Lakeside General Hospital
+          - Clearview Eye Center
+      - name: LOS_DAYS
+        expr: '"los_days"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "0"
+          - "4"
+          - "6"
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: PRIMARY_ICD10
+        expr: '"primary_icd10"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E11.9
+          - E11.65
+          - I50.22
+      - name: PRIOR_ENCOUNTER_ID
+        expr: '"prior_encounter_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E126
+          - E137
+      - name: READMIT_30D
+        expr: '"readmit_30d"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "0"
+          - "1"
+      - name: REASON
+        expr: '"reason"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Chronic condition management
+          - hyperglycemia and fatigue
+          - Post-discharge follow-up
+    time_dimensions:
+      - name: ADMIT_DATE
+        expr: '"admit_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20397"
+          - "20487"
+          - "20586"
+      - name: DISCHARGE_DATE
+        expr: '"discharge_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20397"
+          - "20487"
+          - "20590"
+  - name: IMMUNIZATIONS
+    description: "The table contains records of patient immunizations. Each record captures a specific vaccination event, including the type of vaccine administered and the date it was given."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: IMMUNIZATIONS
+    dimensions:
+      - name: CVX
+        expr: '"cvx"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "158"
+          - "216"
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P004
+      - name: VACCINE
+        expr: '"vaccine"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Influenza
+          - Pneumococcal PCV20
+    time_dimensions:
+      - name: DATE
+        expr: '"date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20417"
+          - "20556"
+          - "20391"
+  - name: LAB_RESULTS
+    description: "The table contains records of laboratory test results associated with patient encounters. Each record represents a single lab test and includes details about the test performed, the measured value with its unit, and whether the result falls within a normal reference range."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: LAB_RESULTS
+    dimensions:
+      - name: ENCOUNTER_ID
+        expr: '"encounter_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E101
+          - E102
+          - E103
+      - name: FLAG
+        expr: '"flag"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - HIGH
+          - LOW
+          - NORMAL
+      - name: LAB_ID
+        expr: '"lab_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - L0001
+          - L0002
+          - L0003
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: REFERENCE
+        expr: '"reference"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - <7.0
+          - '>=60'
+          - 70-99
+      - name: TEST
+        expr: '"test"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - HbA1c
+          - Glucose
+          - eGFR
+      - name: UNIT
+        expr: '"unit"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - '%'
+          - mg/dL
+          - mL/min/1.73m2
+    facts:
+      - name: VALUE
+        expr: '"value"'
+        data_type: "NUMBER(6,2)"
+        access_modifier: public_access
+        sample_values:
+          - "7.70"
+          - "161.00"
+          - "43.00"
+    time_dimensions:
+      - name: COLLECTED_DATE
+        expr: '"collected_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20397"
+          - "20487"
+          - "20586"
+  - name: MEDICAL_CLAIMS
+    description: "The table contains records of medical claims submitted for patient services. Each record represents a single claim line and includes details about the patient and encounter, the type and description of service rendered, and financial information such as billed, allowed, and paid amounts. Records also capture claim processing outcomes, including status and denial reasons where applicable."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: MEDICAL_CLAIMS
+    primary_key:
+      columns:
+        - ENCOUNTER_ID
+    dimensions:
+      - name: CLAIM_ID
+        expr: '"claim_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - C5001
+          - C5002
+          - C5003
+      - name: CLAIM_STATUS
+        expr: '"claim_status"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Paid
+          - Denied
+      - name: CODE
+        expr: '"code"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - "99214"
+          - "638"
+          - "92250"
+      - name: CODE_TYPE
+        expr: '"code_type"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - CPT
+          - DRG
+          - HCPCS
+      - name: DENIAL_REASON
+        expr: '"denial_reason"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - CO-50 / 30-day readmission clinical review (prior E126)
+          - CO-50 / 30-day readmission clinical review (prior E137)
+      - name: DESCRIPTION
+        expr: '"description"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - "Office visit, est. moderate"
+          - Diabetes w CC
+          - Fundus photography / retinal exam
+      - name: ENCOUNTER_ID
+        expr: '"encounter_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E101
+          - E102
+          - E148
+      - name: MEMBER_ID
+        expr: '"member_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - MBR-10001
+          - MBR-10002
+          - MBR-10003
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: PRIMARY_ICD10
+        expr: '"primary_icd10"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E11.9
+          - E11.65
+          - I50.22
+    facts:
+      - name: ALLOWED_AMOUNT
+        expr: '"allowed_amount"'
+        data_type: "NUMBER(7,2)"
+        access_modifier: public_access
+        sample_values:
+          - "210.46"
+          - "206.98"
+          - "9656.28"
+      - name: BILLED_AMOUNT
+        expr: '"billed_amount"'
+        data_type: "NUMBER(7,2)"
+        access_modifier: public_access
+        sample_values:
+          - "244.72"
+          - "240.68"
+          - "11228.23"
+      - name: PAID_AMOUNT
+        expr: '"paid_amount"'
+        data_type: "NUMBER(7,2)"
+        access_modifier: public_access
+        sample_values:
+          - "189.38"
+          - "201.78"
+          - "8929.43"
+    time_dimensions:
+      - name: CLAIM_RECEIVED
+        expr: '"claim_received"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20411"
+          - "20497"
+          - "20597"
+      - name: SERVICE_DATE
+        expr: '"service_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20397"
+          - "20487"
+          - "20586"
+  - name: MEDICATIONS
+    description: "The table contains records of patient medication prescriptions. Each record represents a single medication assigned to a patient, including details about the drug, its prescribed usage, clinical indication, and current status, along with adherence metrics over a six-month period."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: MEDICATIONS
+    dimensions:
+      - name: DRUG
+        expr: '"drug"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Metformin
+          - Lisinopril
+          - Atorvastatin
+      - name: INDICATION
+        expr: '"indication"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - T2D
+          - HTN
+          - HF
+      - name: MED_ID
+        expr: '"med_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - M001
+          - M002
+          - M003
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: SIG
+        expr: '"sig"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 1000 mg BID
+          - 10 mg daily
+          - 40 mg daily
+      - name: STATUS
+        expr: '"status"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - active
+    facts:
+      - name: PDC_6MO
+        expr: '"pdc_6mo"'
+        data_type: "NUMBER(3,2)"
+        access_modifier: public_access
+        sample_values:
+          - "0.57"
+          - "0.56"
+          - "0.89"
+    time_dimensions:
+      - name: START_DATE
+        expr: '"start_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20240"
+  - name: MEMBERS
+    description: "The table contains records of health plan membership and coverage details for patients. Each record represents an individual member's enrollment, including information about their insurance plan, payer, coverage period, and primary care provider attribution."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: MEMBERS
+    primary_key:
+      columns:
+        - PATIENT_ID
+    unique_keys:
+      - columns:
+          - MEMBER_ID
+    dimensions:
+      - name: MEMBER_ID
+        expr: '"member_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - MBR-10001
+          - MBR-10002
+          - MBR-10003
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: PAYER
+        expr: '"payer"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Synthetic Health Plan
+      - name: PCP_ATTRIBUTED
+        expr: '"pcp_attributed"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Dr. R. Fischer
+          - Dr. S. Morgan
+          - Dr. A. Patel
+      - name: PLAN_TYPE
+        expr: '"plan_type"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Medicare Advantage
+          - Commercial PPO
+          - Commercial HMO
+    time_dimensions:
+      - name: COVERAGE_END
+        expr: '"coverage_end"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20818"
+      - name: COVERAGE_START
+        expr: '"coverage_start"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20089"
+  - name: MEMBER_360_SEARCH_SOURCE
+    description: "The table contains records linking patients to various data sources within a broader patient information system. Each record identifies a patient, the originating source table and type, along with associated search text used to retrieve or match patient information."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: MEMBER_360_SEARCH_SOURCE
+    dimensions:
+      - name: PATIENT_ID
+        expr: PATIENT_ID
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P011
+          - P014
+      - name: SEARCH_TEXT
+        expr: SEARCH_TEXT
+        data_type: VARCHAR(134217728)
+        access_modifier: public_access
+        sample_values:
+          - "{\"action_taken\":\"Dose held; potassium recheck in 72h\",\"ae_id\":\"AE001\",\"encounter_id\":\"E103\",\"event\":\"Hyperkalemia\",\"evidence\":\"Potassium 5.1 mmol/L (L0019)\",\"meddra_pt\":\"Hyperkalaemia\",\"onset_date\":\"2026-05-13\",\"outcome\":\"Recovering\",\"patient_id\":\"P001\",\"serious\":false,\"severity\":\"Moderate\",\"suspect_drug\":\"Lisinopril\"}"
+          - "{\"action_taken\":\"Dose held; potassium recheck in 72h\",\"ae_id\":\"AE002\",\"encounter_id\":\"E126\",\"event\":\"Hyperkalemia\",\"evidence\":\"Potassium 5.2 mmol/L (L0086)\",\"meddra_pt\":\"Hyperkalaemia\",\"onset_date\":\"2026-04-02\",\"outcome\":\"Recovering\",\"patient_id\":\"P011\",\"serious\":false,\"severity\":\"Moderate\",\"suspect_drug\":\"Sacubitril/valsartan\"}"
+          - "{\"action_taken\":\"Dose reduced to 16 units\",\"ae_id\":\"AE003\",\"encounter_id\":\"E127\",\"event\":\"Hypoglycemia (patient-reported glucose 58 mg/dL)\",\"evidence\":\"Patient glucose log reported at visit\",\"meddra_pt\":\"Hypoglycaemia\",\"onset_date\":\"2026-04-16\",\"outcome\":\"Recovered\",\"patient_id\":\"P011\",\"serious\":false,\"severity\":\"Mild\",\"suspect_drug\":\"Insulin glargine\"}"
+      - name: SOURCE_TABLE
+        expr: SOURCE_TABLE
+        data_type: VARCHAR(35)
+        access_modifier: public_access
+        sample_values:
+          - PATIENT_360_RAG.RAW.ADVERSE_EVENTS
+          - PATIENT_360_RAG.RAW.CARE_GAPS
+          - PATIENT_360_RAG.RAW.CONDITIONS
+      - name: SOURCE_TYPE
+        expr: SOURCE_TYPE
+        data_type: VARCHAR(15)
+        access_modifier: public_access
+        sample_values:
+          - ADVERSE_EVENTS
+          - CARE_GAPS
+          - CONDITIONS
+  - name: PARSED_DOCUMENTS
+    description: "The table contains records of parsed documents, each identified by a unique document reference and file location. Each record includes the document type and its extracted content stored in a structured format."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: PARSED_DOCUMENTS
+    primary_key:
+      columns:
+        - DOCUMENT_ID
+    dimensions:
+      - name: DOCUMENT_ID
+        expr: DOCUMENT_ID
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 6c0a456a-511a-4ed8-9bf8-974145608b0d
+          - 333c1434-f668-457f-a9f3-d896fe4bfb17
+          - 3dd21061-50d2-4cef-8f4f-d0a67ba5a2dc
+      - name: DOCUMENT_TYPE
+        expr: DOCUMENT_TYPE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - PDF
+          - JPEG
+      - name: FILE_PATH
+        expr: FILE_PATH
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - UNSTRUCTURED/CLINICAL_DOCUMENTS/CLINICAL_NOTES/DOC-CN-027_P011_E127.pdf
+          - UNSTRUCTURED/CLINICAL_DOCUMENTS/CLINICAL_NOTES/DOC-PN-007_P003_E107.pdf
+          - UNSTRUCTURED/CLINICAL_DOCUMENTS/CLINICAL_NOTES/DOC-CN-003_P001_E103.pdf
+      - name: PARSED_JSON
+        expr: PARSED_JSON
+        data_type: OBJECT
+        access_modifier: public_access
+        sample_values:
+          - |-
+            {
+              "metadata": {
+                "pageCount": 1
+              },
+              "pages": [
+                {
+                  "content": "Hospital Admission Note (H&amp;P)\n\nPatient: Dorothy Lin MRN: MRN700111 DOB: 1953-11-14 Sex: F\nEncounter: E127 Date: 2026-04-16 Facility: Lakeside General Hospital\nAuthor: Dr. K. Osei (Hospitalist)\n\n## History of Present Illness\n\n73-year-old female with Type 2 diabetes mellitus (E11.9); Chronic kidney disease, stage 3 (N18.30); Chronic systolic (HFrEF) heart failure (I50.22); Essential hypertension (I10) presenting with shortness of breath and leg swelling. Social history: reports no reliable transportation; reports difficulty affording medications; screens positive for food insecurity. Readmitted 11 days after discharge from E126. No post-discharge follow-up visit was completed. Patient reports confusion about medication instructions.\n\n## Vitals\n\nBP 159/80, HR 104, BMI 29.1\n\n## Labs\n\nHbA1c 9.5 % (HIGH), Glucose 186 mg/dL (HIGH), eGFR 26 mL/min/1.73m2 (LOW), Creatinine 3.2 mg/dL (HIGH), Potassium 5.5 mmol/L (HIGH), BNP 1515 pg/mL (HIGH), LVEF (echo) 27 % (LOW), LDL-C 129 mg/dL (HIGH)\n\n## Assessment\n\nPrimary: I50.23 - shortness of breath and leg swelling. Comorbidities: Type 2 diabetes mellitus (E11.9); Chronic kidney disease, stage 3 (N18.30); Chronic systolic (HFrEF) heart failure (I50.22); Essential hypertension (I10).\n\n## Home Medications\n\n- Metformin 500 mg BID\n- Insulin glargine 20 units nightly\n- Carvedilol 6.25 mg BID\n- Furosemide 40 mg daily\n- Sacubitril/valsartan 24/26 mg BID\n- Atorvastatin 40 mg daily\n\n## Plan\n\nIV furosemide diuresis, daily weights, strict I/O, continue GDMT, cardiology consult.\n\nSYNTHETIC DOCUMENT - fictional patient, generated for testing. Not real medical advice.",
+                  "index": 0
+                }
+              ]
+            }
+          - |-
+            {
+              "metadata": {
+                "pageCount": 1
+              },
+              "pages": [
+                {
+                  "content": "# Outpatient Progress Note\n\nPatient: Priya Nair MRN: MRN700103 DOB: 1953-06-09 Sex: F\nEncounter: E107 Date: 2025-11-23 Facility: Northgate Primary Care\nAuthor: Dr. S. Morgan\n\n## Subjective\n\nVisit for chronic condition management. Priya reports difficulty affording medications.\n\n## Vitals\n\nBP 154/80, HR 71, BMI 23.5\n\n## Labs\n\neGFR 89 mL/min/1.73m2 (NORMAL), Creatinine 1.01 mg/dL (NORMAL), Potassium 4.9 mmol/L (NORMAL), BNP 359 pg/mL (HIGH), LDL-C 140 mg/dL (HIGH)\n\n## Assessment\n\nChronic systolic (HFrEF) heart failure (I50.22); Coronary artery disease (I25.10); Essential hypertension (I10)\n\n## Medications\n\n- Carvedilol 6.25 mg BID\n- Furosemide 40 mg daily\n- Sacubitril/valsartan 24/26 mg BID\n- Atorvastatin 40 mg daily\n- Aspirin 81 mg daily\n\n## Plan\n\nContinue current regimen; reinforce adherence; address open care gaps at next visit.\n\nSYNTHETIC DOCUMENT - fictional patient, generated for testing. Not real medical advice.",
+                  "index": 0
+                }
+              ]
+            }
+          - |-
+            {
+              "metadata": {
+                "pageCount": 1
+              },
+              "pages": [
+                {
+                  "content": "Hospital Admission Note (H&amp;P)\n\nPatient: Maria Alvarez MRN: MRN700101 DOB: 1957-09-03 Sex: F\nEncounter: E103 Date: 2026-05-13 Facility: Lakeside General Hospital\nAuthor: Dr. K. Osei (Hospitalist)\n\n## History of Present Illness\n\n69-year-old female with Type 2 diabetes mellitus (E11.9); Essential hypertension (I10); Chronic kidney disease, stage 3 (N18.30) presenting with hyperglycemia and fatigue. Social history: reports no reliable transportation; reports difficulty affording medications; screens positive for food insecurity.\n\n## Vitals\n\nBP 162/90, HR 94, BMI 25.4\n\n## Labs\n\nHbA1c 8.1 % (HIGH), Glucose 286 mg/dL (HIGH), eGFR 43 mL/min/1.73m2 (LOW), Creatinine 2.09 mg/dL (HIGH), Potassium 5.1 mmol/L (HIGH), LDL-C 75 mg/dL (NORMAL)\n\n## Assessment\n\nPrimary: E11.65 - hyperglycemia and fatigue. Comorbidities: Type 2 diabetes mellitus (E11.9); Essential hypertension (I10); Chronic kidney disease, stage 3 (N18.30).\n\n## Home Medications\n\n- Metformin 1000 mg BID\n- Lisinopril 10 mg daily\n- Atorvastatin 40 mg daily\n\n## Plan\n\nInsulin titration, nephrology consult, diabetes education, dietitian referral.\n\nSYNTHETIC DOCUMENT - fictional patient, generated for testing. Not real medical advice.",
+                  "index": 0
+                }
+              ]
+            }
+  - name: PATIENTS
+    description: "The table contains records of patients, with each record representing an individual patient. Details include demographic information such as age, sex, date of birth, and geographic location, as well as identifiers and primary care provider assignment."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: PATIENTS
+    primary_key:
+      columns:
+        - PATIENT_ID
+    dimensions:
+      - name: AGE
+        expr: '"age"'
+        data_type: "NUMBER(2,0)"
+        access_modifier: public_access
+        sample_values:
+          - "69"
+          - "67"
+          - "73"
+      - name: CITY
+        expr: '"city"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Columbus
+          - Toledo
+          - Cleveland
+      - name: MRN
+        expr: '"mrn"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - MRN700101
+          - MRN700102
+          - MRN700103
+      - name: NAME
+        expr: '"name"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Maria Alvarez
+          - James Whitfield
+          - Priya Nair
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: PCP
+        expr: '"pcp"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Dr. R. Fischer
+          - Dr. S. Morgan
+          - Dr. A. Patel
+      - name: SEX
+        expr: '"sex"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - F
+          - M
+      - name: STATE
+        expr: '"state"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - OH
+      - name: ZIP3
+        expr: '"zip3"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "432"
+          - "436"
+          - "441"
+    time_dimensions:
+      - name: DOB
+        expr: '"dob"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "-4503"
+          - "-6050"
+          - "6192"
+  - name: PHARMACY_CLAIMS
+    description: "The table contains records of pharmacy claims submitted for patients. Each record represents a single prescription fill and includes details about the patient, the drug dispensed, and financial information such as the amount paid, as well as the fill date and supply duration."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: PHARMACY_CLAIMS
+    dimensions:
+      - name: DAYS_SUPPLY
+        expr: '"days_supply"'
+        data_type: "NUMBER(2,0)"
+        access_modifier: public_access
+        sample_values:
+          - "30"
+      - name: DRUG
+        expr: '"drug"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Metformin
+          - Lisinopril
+          - Atorvastatin
+      - name: MEMBER_ID
+        expr: '"member_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - MBR-10001
+          - MBR-10002
+          - MBR-10003
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: RX_CLAIM_ID
+        expr: '"rx_claim_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - RX00001
+          - RX00002
+          - RX00003
+    facts:
+      - name: PAID_AMOUNT
+        expr: '"paid_amount"'
+        data_type: "NUMBER(5,2)"
+        access_modifier: public_access
+        sample_values:
+          - "12.75"
+          - "13.13"
+          - "11.93"
+    time_dimensions:
+      - name: FILL_DATE
+        expr: '"fill_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20544"
+          - "20574"
+          - "20604"
+  - name: RISK_SCORES
+    description: "The table contains records of patient risk assessments, capturing composite risk scores and their underlying components at a point in time. Each record includes clinical, utilization, and social risk dimensions, along with healthcare utilization metrics, care gap burden, and the primary drivers contributing to the overall risk score and tier."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: RISK_SCORES
+    primary_key:
+      columns:
+        - PATIENT_ID
+    dimensions:
+      - name: CARE_GAP_BURDEN
+        expr: '"care_gap_burden"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "60"
+          - "40"
+          - "80"
+      - name: CLINICAL_SEVERITY
+        expr: '"clinical_severity"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "45"
+          - "40"
+          - "10"
+      - name: ED_12MO
+        expr: '"ed_12mo"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "0"
+          - "1"
+      - name: INPATIENT_12MO
+        expr: '"inpatient_12mo"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "1"
+          - "0"
+          - "2"
+      - name: OPEN_GAPS
+        expr: '"open_gaps"'
+        data_type: "NUMBER(2,0)"
+        access_modifier: public_access
+        sample_values:
+          - "3"
+          - "2"
+          - "4"
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: READMISSION
+        expr: '"readmission"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "0"
+          - "100"
+      - name: RISK_SCORE
+        expr: '"risk_score"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "45"
+          - "26"
+          - "29"
+      - name: RISK_TIER
+        expr: '"risk_tier"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - High
+          - Moderate
+          - Low
+      - name: SOCIAL_RISK
+        expr: '"social_risk"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "100"
+          - "68"
+          - "34"
+      - name: TOP_DRIVERS
+        expr: '"top_drivers"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - "eGFR 49 (L0023); 1 inpatient admission(s); 3 open/missed care gaps; SDOH: transportation barrier; SDOH: medication cost barrier; SDOH: food insecurity"
+          - "2 open/missed care gaps; SDOH: lives alone; SDOH: transportation barrier"
+          - "4 open/missed care gaps; SDOH: medication cost barrier"
+      - name: UTILIZATION
+        expr: '"utilization"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "50"
+          - "0"
+          - "100"
+    time_dimensions:
+      - name: AS_OF_DATE
+        expr: '"as_of_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20726"
+  - name: SDOH
+    description: "The table contains records of social determinants of health (SDOH) assessments for patients. Each record captures a patient's assessed barriers and risk factors, including social, economic, and logistical challenges that may impact their health outcomes, along with the date the assessment was conducted."
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: SDOH
+    primary_key:
+      columns:
+        - PATIENT_ID
+    dimensions:
+      - name: FOOD_INSECURITY
+        expr: '"food_insecurity"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "1"
+          - "0"
+      - name: LIVES_ALONE
+        expr: '"lives_alone"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "0"
+          - "1"
+      - name: LOW_HEALTH_LITERACY
+        expr: '"low_health_literacy"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "0"
+          - "1"
+      - name: MEDICATION_COST_BARRIER
+        expr: '"medication_cost_barrier"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "1"
+          - "0"
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: TRANSPORTATION_BARRIER
+        expr: '"transportation_barrier"'
+        data_type: "NUMBER(1,0)"
+        access_modifier: public_access
+        sample_values:
+          - "1"
+          - "0"
+    time_dimensions:
+      - name: ASSESSED_DATE
+        expr: '"assessed_date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20376"
+  - name: VITALS
+    description: The table contains records of patient vital sign measurements captured during clinical encounters. Each record includes cardiovascular and body composition metrics associated with a specific patient and encounter.
+    base_table:
+      database: PATIENT_360_RAG
+      schema: RAW
+      table: VITALS
+    primary_key:
+      columns:
+        - ENCOUNTER_ID
+    dimensions:
+      - name: DBP
+        expr: '"dbp"'
+        data_type: "NUMBER(2,0)"
+        access_modifier: public_access
+        sample_values:
+          - "84"
+          - "93"
+          - "90"
+      - name: ENCOUNTER_ID
+        expr: '"encounter_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - E101
+          - E102
+          - E103
+      - name: HEART_RATE
+        expr: '"heart_rate"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "83"
+          - "68"
+          - "94"
+      - name: PATIENT_ID
+        expr: '"patient_id"'
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - P001
+          - P002
+          - P003
+      - name: SBP
+        expr: '"sbp"'
+        data_type: "NUMBER(3,0)"
+        access_modifier: public_access
+        sample_values:
+          - "157"
+          - "144"
+          - "147"
+    facts:
+      - name: BMI
+        expr: '"bmi"'
+        data_type: "NUMBER(3,1)"
+        access_modifier: public_access
+        sample_values:
+          - "26.0"
+          - "28.5"
+          - "25.4"
+    time_dimensions:
+      - name: DATE
+        expr: '"date"'
+        data_type: DATE
+        access_modifier: public_access
+        sample_values:
+          - "20397"
+          - "20487"
+          - "20586"
+    relationships:
+      - name: PATIENTS_TO_ENCOUNTERS
+        left_table: PATIENTS
+        right_table: ENCOUNTERS
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_CONDITIONS
+        left_table: PATIENTS
+        right_table: CONDITIONS
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_MEDICATIONS
+        left_table: PATIENTS
+        right_table: MEDICATIONS
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_CARE_GAPS
+        left_table: PATIENTS
+        right_table: CARE_GAPS
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_RISK_SCORES
+        left_table: PATIENTS
+        right_table: RISK_SCORES
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_SDOH
+        left_table: PATIENTS
+        right_table: SDOH
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_IMMUNIZATIONS
+        left_table: PATIENTS
+        right_table: IMMUNIZATIONS
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_MEMBERS
+        left_table: PATIENTS
+        right_table: MEMBERS
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_LAB_RESULTS
+        left_table: PATIENTS
+        right_table: LAB_RESULTS
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: PATIENTS_TO_VITALS
+        left_table: PATIENTS
+        right_table: VITALS
+        relationship_columns:
+          - left_column: PATIENT_ID
+            right_column: PATIENT_ID
+      - name: ENCOUNTERS_TO_LAB_RESULTS
+        left_table: ENCOUNTERS
+        right_table: LAB_RESULTS
+        relationship_columns:
+          - left_column: ENCOUNTER_ID
+            right_column: ENCOUNTER_ID
+      - name: ENCOUNTERS_TO_VITALS
+        left_table: ENCOUNTERS
+        right_table: VITALS
+        relationship_columns:
+          - left_column: ENCOUNTER_ID
+            right_column: ENCOUNTER_ID
+      - name: ENCOUNTERS_TO_ADVERSE_EVENTS
+        left_table: ENCOUNTERS
+        right_table: ADVERSE_EVENTS
+        relationship_columns:
+          - left_column: ENCOUNTER_ID
+            right_column: ENCOUNTER_ID
+      - name: MEMBERS_TO_MEDICAL_CLAIMS
+        left_table: MEMBERS
+        right_table: MEDICAL_CLAIMS
+        relationship_columns:
+          - left_column: MEMBER_ID
+            right_column: MEMBER_ID
+      - name: MEMBERS_TO_PHARMACY_CLAIMS
+        left_table: MEMBERS
+        right_table: PHARMACY_CLAIMS
+        relationship_columns:
+          - left_column: MEMBER_ID
+            right_column: MEMBER_ID
+verified_queries:
+  - name: "\"How many patients and clinical encounters are recorded in the adverse events data, and how many of each are unique?\""
+    sql: "SELECT COUNT(patient_id) AS count_patient_id, COUNT(DISTINCT patient_id) AS distinct_patient_id, COUNT(encounter_id) AS count_encounter_id, COUNT(DISTINCT encounter_id) AS distinct_encounter_id FROM adverse_events"
+    question: "How many patients and clinical encounters are recorded in the adverse events data, and how many of each are unique?"
+    verified_at: 1791064051
+    verified_by: <REDACTED>
+    use_as_onboarding_question: false
+  - name: '"How many total and unique encounters and documents are recorded in the patient document repository?"'
+    sql: "SELECT COUNT(encounter_id) AS count_encounter_id, COUNT(DISTINCT encounter_id) AS distinct_encounter_id, COUNT(document_id) AS count_document_id, COUNT(DISTINCT document_id) AS distinct_document_id FROM document_chunks"
+    question: How many total and unique encounters and documents are recorded in the patient document repository?
+    verified_at: 1791064060
+    verified_by: <REDACTED>
+    use_as_onboarding_question: false
+  - name: "\"How many unique patients, members, and encounters are recorded in the medical claims data?\""
+    sql: "SELECT COUNT(patient_id) AS count_patient_id, COUNT(DISTINCT patient_id) AS distinct_patient_id, COUNT(member_id) AS count_member_id, COUNT(DISTINCT member_id) AS distinct_member_id, COUNT(encounter_id) AS count_encounter_id, COUNT(DISTINCT encounter_id) AS distinct_encounter_id FROM medical_claims"
+    question: "How many unique patients, members, and encounters are recorded in the medical claims data?"
+    verified_at: 1791064064
+    verified_by: <REDACTED>
+    use_as_onboarding_question: false
+  - name: '"Which CSV files have been uploaded and processed in the data ingestion pipeline?"'
+    sql: SELECT file_path FROM document_manifest WHERE document_type = 'CSV' AND NOT file_path IS NULL
+    question: Which CSV files have been uploaded and processed in the data ingestion pipeline?
+    verified_at: 1791064068
+    verified_by: <REDACTED>
+    use_as_onboarding_question: false

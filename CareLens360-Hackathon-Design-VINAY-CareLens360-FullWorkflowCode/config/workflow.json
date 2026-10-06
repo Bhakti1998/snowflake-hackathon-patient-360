@@ -1,0 +1,19 @@
+{
+  "database": "CARELENS360_MVP",
+  "connection_name": "<YOUR_CONNECTION>",
+  "seed": 42,
+  "as_of_date": "2026-09-30",
+  "rule_version": "synthetic-demo-v1",
+  "lab_window_days": 180,
+  "ed_window_days": 90,
+  "adherence_window_days": 183,
+  "adherence_threshold": 0.8,
+  "chronic_condition_minimum": 2,
+  "adverse_event_window_days": 90,
+  "high_risk_tiers": ["High", "Critical"],
+  "drug_aliases": {"Drug A": "Lisinopril"},
+  "parse_batch_size": 10,
+  "search_target_lag": "1 hour",
+  "refresh_schedule": "60 MINUTE",
+  "refresh_enabled": false
+}
